@@ -154,7 +154,17 @@ export default {
         });
     },
     editUser(user) {
-      this.editingUser = { ...user };
+      // Garante que todos os campos existem no editingUser para evitar problemas no v-model
+      this.editingUser = {
+        id: user.id,
+        name: user.name || '',
+        numTelemovel: user.numTelemovel || '',
+        email: user.email || '',
+        morada: user.morada || '',
+        codPostal: user.codPostal || '',
+        localidade: user.localidade || '',
+        observacoes: user.observacoes || '',
+      };
     },
     cancelEdit() {
       this.editingUser = null;

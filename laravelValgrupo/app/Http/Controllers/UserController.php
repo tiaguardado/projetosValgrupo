@@ -40,6 +40,8 @@ class UserController extends Controller
             'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
             'morada' => 'sometimes|required|max:255',
             'codPostal' => 'sometimes|required|max:20',
+            'localidade' => 'sometimes|required|max:55',
+            'observacoes' => 'sometimes|required|max:255',
             'password' => 'sometimes|required|confirmed',
         ]);
 
