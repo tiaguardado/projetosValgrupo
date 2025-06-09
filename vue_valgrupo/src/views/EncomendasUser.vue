@@ -1,49 +1,124 @@
 <template>
     <div>
       <!-- Botões de navegação -->
-      <div style="margin-bottom: 20px;">
+      <div style="margin-bottom: 20px; text-align: center;">
         <button @click="goToUsers">Ir para Users</button>
         <button @click="logout">Logout</button>
       </div>
   
-      <h1>Gestão de Encomendas</h1>
+      <h1 style="text-align: center;">Gestão de Encomendas</h1>
   
-      <!-- Lista de encomendas -->
-      <ul>
-        <li v-for="encomenda in encomendas" :key="encomenda.id" style="margin-bottom: 10px;">
-          {{ encomenda.tamanhoPizza }} - {{ encomenda.basePizza }} - {{ encomenda.estadoPedido }}
-          <br />
-          Ingredientes Extra: {{ encomenda.ingredientesExtra || 'Nenhum' }}
-          <br />
-          <button @click="editEncomenda(encomenda)">Editar Estado</button>
-          <button @click="deleteEncomenda(encomenda.id)">Apagar</button>
-        </li>
-      </ul>
+      <!-- Barra de pesquisa por ID -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <input
+          v-model="searchId"
+          placeholder="Pesquisar por ID"
+          style="padding: 5px; width: 200px;"
+          type="number"
+        />
+        <button @click="searchEncomendaById">Pesquisar</button>
+        <button @click="clearSearch">Limpar</button>
+      </div>
+  
+      <!-- Lista de encomendas em tabela -->
+      <table
+        border="1"
+        cellpadding="8"
+        cellspacing="0"
+        style="
+          margin: 0 auto 20px auto;
+          border-collapse: collapse;
+          text-align: center;
+          min-width: 600px;
+        "
+      >
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tamanho</th>
+            <th>Base</th>
+            <th>Estado</th>
+            <th>Ingredientes Extra</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="encomenda in filteredEncomendas" :key="encomenda.id">
+            <td>{{ encomenda.id }}</td>
+            <td>{{ encomenda.tamanhoPizza }}</td>
+            <td>{{ encomenda.basePizza }}</td>
+            <td>{{ encomenda.estadoPedido }}</td>
+            <td>{{ encomenda.ingredientesExtra || 'Nenhum' }}</td>
+            <td>
+              <button @click="editEncomenda(encomenda)">Editar Estado</button>
+              <button @click="deleteEncomenda(encomenda.id)">Apagar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
   
       <!-- Botão para mostrar/esconder o formulário de nova encomenda -->
-      <button @click="showCreateForm = !showCreateForm" style="margin-top: 20px;">
-        {{ showCreateForm ? 'Cancelar Nova Encomenda' : 'Adicionar Encomenda' }}
-      </button>
+      <div style="text-align: center;">
+        <button @click="showCreateForm = !showCreateForm" style="margin-top: 20px;">
+          {{ showCreateForm ? 'Cancelar Nova Encomenda' : 'Adicionar Encomenda' }}
+        </button>
+      </div>
   
       <!-- Formulário para criar nova encomenda -->
-      <div v-if="showCreateForm" style="margin-top: 20px;">
+      <div v-if="showCreateForm" style="margin-top: 20px; text-align: center;">
         <h2>Nova Encomenda</h2>
         <form @submit.prevent="createEncomenda">
           <label>
             Tamanho da Pizza:
-            <input v-model="newEncomenda.tamanhoPizza" required />
+            <select v-model="newEncomenda.tamanhoPizza" required>
+              <option disabled value="">Selecione o tamanho</option>
+              <option>Individual</option>
+              <option>Média</option>
+              <option>Grande</option>
+              <option>Familiar</option>
+            </select>
           </label>
           <br />
   
           <label>
             Base da Pizza:
-            <input v-model="newEncomenda.basePizza" required />
+            <select v-model="newEncomenda.basePizza" required>
+              <option disabled value="">Selecione a base</option>
+              <option>Pizza Havaiana</option>
+              <option>Pizza de Fiambre</option>
+              <option>Pizza Chourição</option>
+            </select>
           </label>
           <br />
   
           <label>
             Ingredientes Extra:
-            <input v-model="newEncomenda.ingredientesExtra" />
+            <div style="display: inline-block; text-align: left; margin: 10px 0;">
+              <label>
+                <input type="checkbox" value="Fiambre" v-model="ingredientesSelecionados" />
+                Fiambre
+              </label>
+              <br />
+              <label>
+                <input type="checkbox" value="Chourição" v-model="ingredientesSelecionados" />
+                Chourição
+              </label>
+              <br />
+              <label>
+                <input type="checkbox" value="queijo" v-model="ingredientesSelecionados" />
+                queijo
+              </label>
+              <br />
+              <label>
+                <input type="checkbox" value="cogumelos" v-model="ingredientesSelecionados" />
+                cogumelos
+              </label>
+              <br />
+              <label>
+                <input type="checkbox" value="picante" v-model="ingredientesSelecionados" />
+                picante
+              </label>
+            </div>
           </label>
           <br />
   
@@ -62,7 +137,7 @@
       </div>
   
       <!-- Formulário para editar SÓ o estado do pedido -->
-      <div v-if="editingEncomenda" style="margin-top: 20px;">
+      <div v-if="editingEncomenda" style="margin-top: 20px; text-align: center;">
         <h2>Editar Estado da Encomenda</h2>
         <form @submit.prevent="updateEstadoPedido">
           <label>
@@ -96,10 +171,22 @@
           ingredientesExtra: '',
           estadoPedido: 'Pendente',
         },
+        ingredientesSelecionados: [], // array dos checkboxes
         editingEncomenda: null,
         showCreateForm: false,
         authStore: useAuthStore(),
+        searchId: '', // campo para pesquisa por id
       };
+    },
+    computed: {
+      filteredEncomendas() {
+        if (!this.searchId) {
+          return this.encomendas;
+        }
+        return this.encomendas.filter(
+          encomenda => encomenda.id === parseInt(this.searchId)
+        );
+      },
     },
     mounted() {
       this.fetchEncomendas();
@@ -123,6 +210,9 @@
           });
       },
       createEncomenda() {
+        // Atualizar o campo ingredientesExtra com os selecionados, separados por vírgula
+        this.newEncomenda.ingredientesExtra = this.ingredientesSelecionados.join(', ');
+  
         axios
           .post('http://localhost:8000/api/encomendas', this.newEncomenda, {
             headers: this.getAuthHeaders(),
@@ -135,6 +225,7 @@
               ingredientesExtra: '',
               estadoPedido: 'Pendente',
             };
+            this.ingredientesSelecionados = [];
             this.showCreateForm = false;
             alert('Encomenda criada com sucesso!');
           })
@@ -194,6 +285,12 @@
         this.authStore.setToken(null);
         localStorage.removeItem('authToken');
         this.$router.push('/login');
+      },
+      searchEncomendaById() {
+        // Já é reativo por causa da computed filteredEncomendas
+      },
+      clearSearch() {
+        this.searchId = '';
       },
     },
   };

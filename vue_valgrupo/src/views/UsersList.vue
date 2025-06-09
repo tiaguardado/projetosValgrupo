@@ -1,25 +1,62 @@
 <template>
   <div>
-    <h1>Lista de Utilizadores</h1>
+    <h1 style="text-align: center;">Lista de Utilizadores</h1>
 
-    <div style="margin-bottom: 20px;">
+    <!-- Botões de navegação -->
+    <div style="margin-bottom: 20px; text-align: center;">
       <button @click="goToLogin">Login</button>
       <button @click="goToRegister">Registar</button>
       <button @click="goToEncomendas">Encomendas</button>
       <button @click="logout">Logout</button>
     </div>
 
-    <ul>
-      <li v-for="user in users" :key="user.id">
-        {{ user.name }} - {{ user.email }}
-        <button @click="editUser(user)">Editar</button>
-        <button @click="deleteUser(user.id)">Apagar</button>
-      </li>
-    </ul>
+    <!-- Tabela de utilizadores -->
+    <table
+      border="1"
+      cellpadding="8"
+      cellspacing="0"
+      style="
+        margin: 0 auto 20px auto;
+        border-collapse: collapse;
+        text-align: center;
+        min-width: 800px;
+      "
+    >
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Telemóvel</th>
+          <th>Email</th>
+          <th>Morada</th>
+          <th>Código Postal</th>
+          <th>Localidade</th>
+          <th>Observações</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.numTelemovel }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.morada }}</td>
+          <td>{{ user.codPostal }}</td>
+          <td>{{ user.localidade }}</td>
+          <td>{{ user.observacoes || 'Nenhuma' }}</td>
+          <td>
+            <button @click="editUser(user)">Editar</button>
+            <button @click="deleteUser(user.id)">Apagar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div v-if="editingUser" style="margin-top: 20px;">
+    <!-- Formulário para editar utilizador -->
+    <div v-if="editingUser" style="margin-top: 20px; text-align: center;">
       <h2>Editar Utilizador</h2>
-      <form @submit.prevent="updateUser">
+      <form @submit.prevent="updateUser" style="display: inline-block; text-align: left;">
         <label>
           Nome:
           <input v-model="editingUser.name" required />
@@ -104,7 +141,7 @@ export default {
         });
     },
     editUser(user) {
-      this.editingUser = { ...user }; // clona para edição
+      this.editingUser = { ...user };
     },
     cancelEdit() {
       this.editingUser = null;
@@ -130,8 +167,6 @@ export default {
     },
     deleteUser(userId) {
       if (!confirm('Tem certeza que deseja apagar este utilizador?')) return;
-
-      console.log('Token para delete:', this.authStore.token); // Debug token
 
       axios
         .delete(`http://localhost:8000/api/users/${userId}`, {
