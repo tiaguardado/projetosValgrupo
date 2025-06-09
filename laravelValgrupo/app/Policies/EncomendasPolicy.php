@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Encomendas;
+use App\Models\Encomenda;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -19,7 +19,7 @@ class EncomendasPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Encomendas $encomendas): bool
+    public function view(User $user, Encomenda $encomendas): bool
     {
         return false;
     }
@@ -35,7 +35,7 @@ class EncomendasPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Encomendas $encomendas): bool
+    public function update(User $user, Encomenda $encomendas): bool
     {
         return false;
     }
@@ -43,7 +43,7 @@ class EncomendasPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Encomendas $encomendas): bool
+    public function delete(User $user, Encomenda $encomendas): bool
     {
         return false;
     }
@@ -51,7 +51,7 @@ class EncomendasPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Encomendas $encomendas): bool
+    public function restore(User $user, Encomenda $encomendas): bool
     {
         return false;
     }
@@ -59,8 +59,10 @@ class EncomendasPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Encomendas $encomendas): bool
+    public function forceDelete(User $user, Encomenda $encomendas): bool
     {
         return false;
     }
+
+
 }

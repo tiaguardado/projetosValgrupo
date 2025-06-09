@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateEncomendasRequest extends FormRequest
+class StoreEncomendaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class UpdateEncomendasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'tamanhoPizza' => 'required|max:55',
+            'basePizza' => 'required|max:55',
+            'ingredientesExtra' => 'max:255',
+            'estadoPedido' => 'in:Pendente,Concluido,Cancelado',
+
         ];
     }
 }

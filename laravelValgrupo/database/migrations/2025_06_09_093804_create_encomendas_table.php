@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('tamanhoPizza');
             $table->string('basePizza');
             $table->text('ingredientesExtra')->nullable(); // pode ser null (caso não haja extra)
-            $table->string('estadoPedido')->default('pendente'); // estado inicial por default
+            $table->string('estadoPedido')->default('Pendente'); // estado inicial por default
 
             $table->timestamps();
         });
