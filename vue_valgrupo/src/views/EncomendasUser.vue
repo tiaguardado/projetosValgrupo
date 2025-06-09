@@ -10,7 +10,7 @@
   
       <!-- Lista de encomendas -->
       <ul>
-        <li v-for="encomenda in encomendas" :key="encomenda.id">
+        <li v-for="encomenda in encomendas" :key="encomenda.id" style="margin-bottom: 10px;">
           {{ encomenda.tamanhoPizza }} - {{ encomenda.basePizza }} - {{ encomenda.estadoPedido }}
           <br />
           Ingredientes Extra: {{ encomenda.ingredientesExtra || 'Nenhum' }}
@@ -47,6 +47,16 @@
           </label>
           <br />
   
+          <label>
+            Estado do Pedido:
+            <select v-model="newEncomenda.estadoPedido" required>
+              <option>Pendente</option>
+              <option>Concluido</option>
+              <option>Cancelado</option>
+            </select>
+          </label>
+          <br />
+  
           <button type="submit">Criar Encomenda</button>
         </form>
       </div>
@@ -59,9 +69,8 @@
             Estado do Pedido:
             <select v-model="editingEncomenda.estadoPedido" required>
               <option>Pendente</option>
-              <option>Em Preparação</option>
-              <option>Pronto</option>
-              <option>Entregue</option>
+              <option>Concluido</option>
+              <option>Cancelado</option>
             </select>
           </label>
           <br />
