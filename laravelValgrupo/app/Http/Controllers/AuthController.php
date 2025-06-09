@@ -16,7 +16,7 @@ class AuthController extends Controller
             'morada' => 'required|max:255',
             'codPostal' => 'required|max:20',
             'localidade' => 'required|max:255',
-            'observacoes' => 'required|max:255',
+            'observacoes' => 'max:255',
             'password' => 'required|confirmed'
         ]);
 

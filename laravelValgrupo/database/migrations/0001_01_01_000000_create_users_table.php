@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('morada');       // novo campo
             $table->string('codPostal');    // novo campo
             $table->string('localidade');       // novo campo
-            $table->string('observacoes');    // novo campo
+            $table->string('observacoes')->nullable();    // novo campo
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

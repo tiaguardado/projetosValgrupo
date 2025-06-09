@@ -15,7 +15,6 @@ class Encomenda extends Model
         'basePizza',
         'ingredientesExtra',
         'estadoPedido',
-
     ];
 
     public function user(){

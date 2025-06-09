@@ -15,9 +15,9 @@ Route::post('/login',[AuthController::class, 'login']);
 Route::post('/logout',[AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 
-Route::get('/users', [UserController::class, 'index']);    // Listar todos
-Route::get('/users/{id}', [UserController::class, 'show']); // Mostrar 1
-Route::put('/users/{id}', [UserController::class, 'update']); // Atualizar
-Route::delete('/users/{id}', [UserController::class, 'destroy']); // Soft delete
+Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');    // Listar todos
+Route::get('/users/{id}', [UserController::class, 'show'])->middleware('auth:sanctum'); // Mostrar 1
+Route::put('/users/{id}', [UserController::class, 'update'])->middleware('auth:sanctum'); // Atualizar
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum'); // Soft delete
 
 Route::apiResource('encomendas', EncomendaController::class)->middleware('auth:sanctum');
