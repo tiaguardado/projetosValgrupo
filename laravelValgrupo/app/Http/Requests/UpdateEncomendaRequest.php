@@ -22,7 +22,7 @@ class UpdateEncomendaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'estadoPedido' => 'required|in:Concluido,Cancelado',
+            'estadoPedido' => 'required|in:Pendente,Concluido,Cancelado',
         ];
     }
 }

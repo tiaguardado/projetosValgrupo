@@ -2,12 +2,17 @@
   <div>
     <h1 style="text-align: center;">Lista de Utilizadores</h1>
 
+    <!-- Mostrar nome do utilizador se logado -->
+    <div v-if="isLoggedIn" style="text-align: center; margin-bottom: 10px;">
+      <strong>Bem-vindo, {{ userName }}!</strong>
+    </div>
+
     <!-- Botões de navegação -->
     <div style="margin-bottom: 20px; text-align: center;">
-      <button @click="goToLogin">Login</button>
-      <button @click="goToRegister">Registar</button>
-      <button @click="goToEncomendas">Encomendas</button>
-      <button @click="logout">Logout</button>
+      <button v-if="!isLoggedIn" @click="goToLogin">Login</button>
+      <button v-if="!isLoggedIn" @click="goToRegister">Registar</button>
+      <button v-if="isLoggedIn" @click="goToEncomendas">Encomendas</button>
+      <button v-if="isLoggedIn" @click="logout">Logout</button>
     </div>
 
     <!-- Tabela de utilizadores -->
@@ -118,6 +123,14 @@ export default {
       editingUser: null,
       authStore: useAuthStore(),
     };
+  },
+  computed: {
+    isLoggedIn() {
+      return !!this.authStore.token;
+    },
+    userName() {
+      return this.authStore.user?.name || 'Utilizador';
+    },
   },
   mounted() {
     this.fetchUsers();

@@ -210,7 +210,6 @@
           });
       },
       createEncomenda() {
-        // Atualizar o campo ingredientesExtra com os selecionados, separados por vírgula
         this.newEncomenda.ingredientesExtra = this.ingredientesSelecionados.join(', ');
   
         axios
@@ -287,7 +286,6 @@
         this.$router.push('/login');
       },
       searchEncomendaById() {
-        // Já é reativo por causa da computed filteredEncomendas
       },
       clearSearch() {
         this.searchId = '';
